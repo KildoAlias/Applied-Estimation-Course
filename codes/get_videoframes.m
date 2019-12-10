@@ -4,7 +4,7 @@ if nargin < 3
 end
 
 numberofframes=v.NumberOfFrames-2;  
-Totalframes=numberofframes/rate;
+Totalframes=floor(numberofframes/rate);
 mov=cell(Totalframes,1);
 
 k=1;

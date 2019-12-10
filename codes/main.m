@@ -1,28 +1,28 @@
 clc
-clear all
-close all
+%clear all
+%close all
 
 %Parameters for CV
-    scale_factor=1/5; %rescaling of video
+    scale_factor=0.2; %rescaling of video
     rate=2;  %sample rate of videos i.e each frame or i:th frame
-    histheight=200; % Size of sliding histogram window
-    histwidth=200;
+    histheight=60; % Size of sliding histogram window
+    histwidth=60;
     greyscale_threshold=110; %threshold for setting likely values
     
 %Parameters for tracking
-    M=3000; % Particles 
-    Q=[20,0;0,20]; %Measurement noise
-    R=[500,0;0,500]; %Process noise
-    outlier_threshold= 0.0000001; 
+    M=1000; % Particles 
+    Q=[200,0;0,200]; %Measurement noise
+    R=[100,0;0,100]; %Process noise
+    outlier_threshold= 0.00001; 
     Resample_mode=2; % 1 for multinomial, 2 for systematic
     
 
-refimage=imread("black_ball_white_back4.jpg"); %ref image 
+refimage=imread("refcola.jpg"); %ref image 
 refimage=rgb2gray(refimage);                    % turn it grey
 refimage=imresize(refimage, scale_factor); % resize
 
 
-v = VideoReader("IMG_8594.mov"); % read video
+v = VideoReader("video-1575970356.mp4"); % read video
 
 
 [H,W,videoframes,colorframes]=get_videoframes(v,scale_factor, rate); %get all videoframes
@@ -31,7 +31,7 @@ S_bar(1,:)=randi([1,H],1,M);    %Initializing S_bar
 S_bar(2,:)=randi([1,W],1,M);
 S_bar(3,:)=1/M;
 
-figure()
+%figure()
 k=1;
 disp('Starting object detection and tracking...')
 for i=1:length(videoframes)   %For each videoframe
@@ -76,7 +76,7 @@ for i=1:length(videoframes)   %For each videoframe
     else
         title('No object detected')
     end
-    pause(0.001)
+    pause(0.0001)
 
 end
 title('No more frames, tracking done!')

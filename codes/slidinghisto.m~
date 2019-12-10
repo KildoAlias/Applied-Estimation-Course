@@ -1,4 +1,4 @@
-function [min_h,costmap,I] = slidinghisto(image,refhist_v,histwidth,histheight,weights)
+function [min_h,costmap,I] = slidinghisto(image,refimage,histwidth,histheight)
 % slidinghisto(image,refimage,histwidth,histheight)
 %
 % Input: Frame, reference frame, width of histogram window and height of
@@ -8,19 +8,25 @@ function [min_h,costmap,I] = slidinghisto(image,refhist_v,histwidth,histheight,w
 % I, an image of the same index as the best matching histogram.
 
 [H,W,D]=size(image);
-cost=ones(1,D);
-costmap=ones(H-histheight,W-histwidth);
+cost=zeros(1,D)
 for i=1:H-histheight
    
     for j=1:W-histwidth
-        partimage=(image(i:histheight+i,j:histwidth+j,:));
-        costmap(i,j)=histogram_matching(partimage,refhist_v,weights);
+    
+        for color=1:D
+        hist=imhist(image(i:histheight+i,j:histwidth+j,color));
+        refhist=imhist(refimage(:,:,color));
+        cost(color)=histogram_matching(hist,refhist);
+        end
+        cost=sum(cost)/D;
+        costmap(i,j)=cost
     end
-end
-minimum_value=min(min(costmap));
-[x,y]=find(costmap==minimum_value,1);
 
-min_h(1)=x;
-min_h(2)=y;
+end
+
+minimum_value=min(min(costmap));
+[i,j]=find(costmap==minimum_value,1);
+min_h(1)=i;
+min_h(2)=j;
 I=image(min_h(1):min_h(1)+histheight,min_h(2):min_h(2)+histwidth);               
 end

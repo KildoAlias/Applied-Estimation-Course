@@ -13,15 +13,10 @@ for i=1:rate:numberofframes
     videoframe=read(v,i);
     videoframe_c=imresize(videoframe, scale_factor);
     videoframe_color{k}=videoframe_c;
-    
-    image=rgb2gray(videoframe_c); 
-    mov{k}=image;
-    
+    mov{k}=videoframe_c;
+
     k=k+1;
 end
-
 videoframes=mov;
 [H,W]=size(videoframes{1});
-
-
 end

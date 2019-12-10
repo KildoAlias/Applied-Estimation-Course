@@ -5,9 +5,9 @@ clc
 %Parameters for CV
     scale_factor=0.2; %rescaling of video
     rate=2;  %sample rate of videos i.e each frame or i:th frame
-    histheight=30; % Size of sliding histogram window
-    histwidth=30;
-    greyscale_threshold=90; %threshold for setting likely values
+    histheight=50; % Size of sliding histogram window
+    histwidth=50;
+    greyscale_threshold=160; %threshold for setting likely values
     
 %Parameters for tracking
     M=1000; % Particles 
@@ -17,18 +17,18 @@ clc
     Resample_mode=2; % 1 for multinomial, 2 for systematic
     
 
-refimage=imread("energyref2.jpg"); %ref image in color
+refimage=imread("colarefcolor.jpg"); %ref image in color
 refimage=imresize(refimage, scale_factor); % resize
 
 for d=1:3
     refhist_v(:,:,d)=imhist(refimage(:,:,d));
     weights(d)=(sum(sum(refimage(:,:,d))));
 end
-weights=weights./max(weights);
 
 
 
-v = VideoReader("video-1575978909.mp4"); % read video
+
+v = VideoReader("video-1575970356.mp4"); % read video
 
 [H,W,videoframes,colorframes]=get_videoframes(v,scale_factor, rate); %get all videoframes
 
@@ -42,7 +42,7 @@ disp('Starting object detection and tracking...')
 for i=1:length(videoframes)   %For each videoframe
     
     
-    [fullimageidx,~,best_image_histo]=slidinghisto(videoframes{i},refhist_v,histwidth,histheight,weights); % Get best part of image that resulted in best match
+    [fullimageidx,~,best_image_histo]=slidinghisto(videoframes{i},refimage,histwidth,histheight); % Get best part of image that resulted in best match
     best_image=threshold_likely_pixels(best_image_histo,greyscale_threshold); %set likely pixels
     measurement=masscentre(best_image); % get masscentre
     measurement(1)=fullimageidx(1)+measurement(1);
@@ -67,7 +67,7 @@ for i=1:length(videoframes)   %For each videoframe
      hold off
      imshow(colorframes{i})
      hold on
-     %scatter(S_bar(2,:),S_bar(1,:),5,"filled")
+     scatter(S_bar(2,:),S_bar(1,:),5,"filled")
      plot(Prediction(2),Prediction(1),'g+','MarkerSize',15,'LineWidth',2)
     if isnan(measurement)~=1    
         x=measurement(1);

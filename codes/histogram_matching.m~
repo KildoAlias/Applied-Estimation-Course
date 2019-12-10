@@ -12,6 +12,7 @@ function [costvalue,costs]=histogram_matching(partim,refhist3D,weights)
         refhist=(refhist3D(:,:,d));
 
         
+   
         % Normalize histograms
         refhist=refhist/sum(refhist);
         hist=hist/sum(hist);
@@ -20,7 +21,7 @@ function [costvalue,costs]=histogram_matching(partim,refhist3D,weights)
         costs=ones(1,(length(hist)-1))*inf;
         diff=abs(hist-refhist);
         % divide by 2 to get normalization (two histograms)
-        cost(d)=(sum(diff)/2)./weights(d);
+        cost(d)=(sum(diff)/2);
         
         % Returns minimum cost value of histograms (least difference between histograms)
         
